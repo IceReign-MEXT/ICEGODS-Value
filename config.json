@@ -1,4 +1,14 @@
 {
-    "telegram_token": "YOUR_BOT_TOKEN_HERE",
-    "telegram_chat_id": "6453658778"
+    "ethereum_rpc": "https://mainnet.infura.io/v3/YOUR_PROJECT_ID",
+    "solana_rpc": "https://api.mainnet-beta.solana.com",
+    "telegram_token": "YOUR_TELEGRAM_BOT_TOKEN",
+    "telegram_chat_id": "6453658778",
+    "wallets": {
+        "ethereum": [
+            "0x1650dcf7c462cb101c6b399b2deeceb72d09af6f"
+        ],
+        "solana": [
+            "4tUTqBSzqz8eXbZPVdP2e5tiNRbFK3j5GFTqLEKubUzy"
+        ]
+    }
 }

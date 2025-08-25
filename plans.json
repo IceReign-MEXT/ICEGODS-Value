@@ -1,0 +1,34 @@
+{
+  "plans": [
+    {
+      "name": "Basic",
+      "duration_days": 30,
+      "prices": {
+        "USDT": 10,
+        "SOL": 0.05,
+        "ETH": 0.003,
+        "BTC": 0.00015
+      }
+    },
+    {
+      "name": "Pro",
+      "duration_days": 30,
+      "prices": {
+        "USDT": 25,
+        "SOL": 0.12,
+        "ETH": 0.007,
+        "BTC": 0.00035
+      }
+    },
+    {
+      "name": "Elite",
+      "duration_days": 30,
+      "prices": {
+        "USDT": 50,
+        "SOL": 0.25,
+        "ETH": 0.014,
+        "BTC": 0.0007
+      }
+    }
+  ]
+}

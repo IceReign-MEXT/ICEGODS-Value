@@ -1,0 +1,6 @@
+nohup: ignoring input
+Paste your wallet address: Traceback (most recent call last):
+  File "/data/data/com.termux/files/home/MasterBot/Master_Bot", line 46, in <module>
+    wallet_address = input("Paste your wallet address: ")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 9] Bad file descriptor

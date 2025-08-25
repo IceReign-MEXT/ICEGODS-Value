@@ -1,0 +1,5 @@
+nohup: ignoring input
+Traceback (most recent call last):
+  File "/data/data/com.termux/files/home/MasterBot/AutoRevoke/auto_revoke.py", line 6, in <module>
+    from solana.transaction import Transaction
+ModuleNotFoundError: No module named 'solana.transaction'

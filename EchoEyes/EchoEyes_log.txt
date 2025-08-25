@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/data/data/com.termux/files/home/MasterBot/EchoEyes/echoeyes.py", line 4, in <module>
+    from solana.rpc.async_api import AsyncClient
+ModuleNotFoundError: No module named 'solana'

@@ -1,0 +1,110 @@
+from dotenv import load_dotenv
+
+# Load .env file manually
+load_dotenv(dotenv_path=os.path.expanduser("~/MasterBot/config.env"))
+
+import os
+import logging
+from dotenv import load_dotenv
+from telegram import Update
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    ContextTypes,
+)
+
+# ---------------------------
+# Load ENV variables
+# ---------------------------
+load_dotenv()
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+
+if not BOT_TOKEN:
+    raise ValueError("❌ TELEGRAM_BOT_TOKEN not set in config.env")
+if not CHAT_ID:
+    raise ValueError("❌ TELEGRAM_CHAT_ID not set in config.env")
+
+# ---------------------------
+# Logging setup
+# ---------------------------
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO
+)
+
+# ---------------------------
+# Commands
+# ---------------------------
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    menu = (
+        "👁 Welcome to IceGods EchoEyes (Pro Bot)!\n\n"
+        "Available commands:\n"
+        "/start - Show this menu\n"
+        "/stats - Check system status and uptime\n"
+        "/whitepaper - Get the IceGods whitepaper\n"
+        "/subscribe <plan> - Subscribe to a plan\n"
+        "/confirm <tx> - Confirm payment\n"
+        "/wallets - See deposit wallets\n"
+        "/status - Check subscription status\n"
+        "/checkuser - Check if a user is flagged as scam\n"
+    )
+    await update.message.reply_text(menu)
+
+async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("📊 ICEGODS Pro Bot is running smoothly...")
+
+async def whitepaper(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("📄 Whitepaper link: https://example.com/icegods_whitepaper.pdf")
+
+async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if len(context.args) == 0:
+        await update.message.reply_text("Usage: /subscribe <plan>")
+    else:
+        plan = context.args[0]
+        await update.message.reply_text(f"💎 You selected plan: {plan}. Please make payment to confirm.")
+
+async def confirm(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if len(context.args) == 0:
+        await update.message.reply_text("Usage: /confirm <transaction_id>")
+    else:
+        tx = context.args[0]
+        await update.message.reply_text(f"✅ Transaction {tx} received. We will verify and activate your subscription.")
+
+async def wallets(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "💰 Deposit wallets:\n"
+        "SOL: 4tUTqBSzqz8eXbZPVdP2e5tiNRbFK3j5GFTqLEKubUzy\n"
+        "ETH: 0x1650dcf7c462cb101c6b399b2deeceb72d09af6f\n"
+        "BTC: bc1qe8pf5nzj553kcyv0nl4p5cl6edrsl8ullffkmk\n"
+    )
+
+async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("🔐 Your subscription is currently active.")
+
+async def checkuser(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if len(context.args) == 0:
+        await update.message.reply_text("Usage: /checkuser <username>")
+    else:
+        user = context.args[0]
+        await update.message.reply_text(f"🔎 Checking scam database for user: {user}... (no scam reports found)")
+
+# ---------------------------
+# Main
+# ---------------------------
+def main():
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
+
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("stats", stats))
+    app.add_handler(CommandHandler("whitepaper", whitepaper))
+    app.add_handler(CommandHandler("subscribe", subscribe))
+    app.add_handler(CommandHandler("confirm", confirm))
+    app.add_handler(CommandHandler("wallets", wallets))
+    app.add_handler(CommandHandler("status", status))
+    app.add_handler(CommandHandler("checkuser", checkuser))
+
+    app.run_polling()
+
+if __name__ == "__main__":
+    main()

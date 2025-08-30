@@ -1,2 +1,45 @@
-2025-08-30 11:52:51,564 - root - INFO - [WalletMonitor] Bot started
-2025-08-30 11:52:51,566 - root - INFO - [WalletMonitor] User 123456789 subscription: free
+Traceback (most recent call last):
+  File "/data/data/com.termux/files/home/MasterBot/payment_webhook.py", line 12, in <module>
+    raise ValueError("Please set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in .env")
+ValueError: Please set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in .env
+/data/data/com.termux/files/usr/lib/python3.12/site-packages/apscheduler/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import get_distribution, DistributionNotFound
+/data/data/com.termux/files/usr/lib/python3.12/site-packages/web3/__init__.py:2: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+Exception in thread Thread-1 (run_bot):
+Traceback (most recent call last):
+  File "/data/data/com.termux/files/usr/lib/python3.12/threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "/data/data/com.termux/files/usr/lib/python3.12/threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "/data/data/com.termux/files/home/MasterBot/main.py", line 67, in run_bot
+    application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
+                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telegram/ext/_application.py", line 519, in builder
+    return ApplicationBuilder()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telegram/ext/_applicationbuilder.py", line 194, in __init__
+    raise exc
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telegram/ext/_applicationbuilder.py", line 191, in __init__
+    self._job_queue: ODVInput["JobQueue"] = DefaultValue(JobQueue())
+                                                         ^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telegram/ext/_jobqueue.py", line 94, in __init__
+    self.scheduler: AsyncIOScheduler = AsyncIOScheduler(
+                                       ^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/apscheduler/schedulers/base.py", line 87, in __init__
+    self.configure(gconfig, **options)
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/apscheduler/schedulers/base.py", line 126, in configure
+    self._configure(config)
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/apscheduler/schedulers/asyncio.py", line 47, in _configure
+    self._eventloop = maybe_ref(config.pop('event_loop', None)) or asyncio.get_event_loop()
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/asyncio/events.py", line 702, in get_event_loop
+ * Serving Flask app 'main'
+ * Debug mode: off
+    raise RuntimeError('There is no current event loop in thread %r.'
+RuntimeError: There is no current event loop in thread 'Thread-1 (run_bot)'.
+2025-08-30 12:54:20,228 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8088
+ * Running on http://10.160.106.73:8088
+2025-08-30 12:54:20,229 - werkzeug - INFO - [33mPress CTRL+C to quit[0m

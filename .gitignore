@@ -12,3 +12,4 @@ users.json
 __pycache__/
 *.pyc
 EOF
+.env

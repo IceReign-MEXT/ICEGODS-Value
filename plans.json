@@ -1,7 +1,6 @@
 {
-  "plans": [
-    {
-      "name": "Basic",
+  "plans": {
+    "Basic": {
       "duration_days": 30,
       "prices": {
         "USDT": 10,
@@ -10,8 +9,7 @@
         "BTC": 0.00015
       }
     },
-    {
-      "name": "Pro",
+    "Pro": {
       "duration_days": 30,
       "prices": {
         "USDT": 25,
@@ -20,8 +18,7 @@
         "BTC": 0.00035
       }
     },
-    {
-      "name": "Elite",
+    "Elite": {
       "duration_days": 30,
       "prices": {
         "USDT": 50,
@@ -30,5 +27,5 @@
         "BTC": 0.0007
       }
     }
-  ]
+  }
 }

@@ -1,4 +1,13 @@
+/data/data/com.termux/files/usr/lib/python3.12/site-packages/apscheduler/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import get_distribution, DistributionNotFound
 Traceback (most recent call last):
-  File "/data/data/com.termux/files/home/MasterBot/EchoEyes/echoeyes.py", line 4, in <module>
-    from solana.rpc.async_api import AsyncClient
-ModuleNotFoundError: No module named 'solana'
+  File "/data/data/com.termux/files/home/MasterBot/EchoEyes/echoeyes.py", line 20, in <module>
+    solana_client = AsyncClient("https://api.mainnet-beta.solana.com")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/solana/rpc/async_api.py", line 97, in __init__
+    self._provider = async_http.AsyncHTTPProvider(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/solana/rpc/providers/async_http.py", line 52, in __init__
+    self.session = httpx.AsyncClient(timeout=timeout, proxy=proxy)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: AsyncClient.__init__() got an unexpected keyword argument 'proxy'

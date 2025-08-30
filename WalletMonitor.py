@@ -8,10 +8,6 @@ from telegram import Bot
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
-# Validate token
-if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-    raise ValueError("Please set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in your .env file")
-
 # Initialize Telegram Bot
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 
@@ -33,12 +29,7 @@ def payment_webhook():
             return jsonify({"error": "Missing fields"}), 400
 
         # Send Telegram notification
-        msg = (
-            f"💰 Payment received!\n"
-            f"User: {telegram_id}\n"
-            f"Amount: {amount} {currency}\n"
-            f"✅ Upgraded to PAID subscription"
-        )
+        msg = f"💰 Payment received!\nUser: {telegram_id}\nAmount: {amount} {currency}\n✅ Upgraded to PAID subscription"
         bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=msg)
 
         # Respond to the webhook

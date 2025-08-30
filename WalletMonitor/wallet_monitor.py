@@ -1,25 +1,49 @@
-import httpx
-import json
 import os
-from dotenv import load_dotenv
-from subscription import get_subscription
+import logging
+import asyncio
+from telegram import Bot
 
-load_dotenv('../config/config.env')
+# =========================
+# Environment Variables
+# =========================
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
+
+# =========================
+# Users Database (simple dict)
+# =========================
+users = {}  # telegram_id -> subscription
+
+# Example: preload free users
+users["123456789"] = "free"
+
+# =========================
+# Bot Notify
+# =========================
+bot = Bot(token=TELEGRAM_BOT_TOKEN)
+
+async def notify_payment(telegram_id, amount, currency):
+    # Upgrade subscription automatically
+    users[telegram_id] = "paid"
+    
+    # Notify Telegram
+    text = (
+        f"💰 Payment received!\n\n"
+        f"User: {telegram_id}\n"
+        f"Amount: {amount} {currency}\n"
+        f"Status: Upgraded to PAID subscription ✅"
+    )
+    await bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=text)
+    logging.info(f"[WalletMonitor] Notified payment for user {telegram_id}")
+
+# =========================
+# Bot Start (for testing)
+# =========================
 def start_bot():
-    print("[WalletMonitor] Bot started")
-
-    # Load users
-    users_file = os.path.join(os.path.dirname(__file__), '../data/users.json')
-    try:
-        with open(users_file, 'r') as f:
-            users = json.load(f)
-        print(f"[WalletMonitor] Loaded {len(users.get('users', []))} users")
-    except Exception as e:
-        print(f"[WalletMonitor] Failed to load users.json: {e}")
-        users = {"users": []}
-
-    # Check subscription for each user
-    for user in users.get("users", []):
-        sub_status = get_subscription(user["telegram_id"])
-        print(f"[WalletMonitor] User {user['telegram_id']} subscription: {sub_status}")
+    logging.info("[WalletMonitor] Bot started")
+    for user_id, status in users.items():
+        logging.info(f"[WalletMonitor] User {user_id} subscription: {status}")

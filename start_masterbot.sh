@@ -1,19 +1,22 @@
 #!/bin/bash
+
+# =========================
+# ICEGODS MasterBot Launcher
+# =========================
+
+# Go to MasterBot directory
+cd ~/MasterBot || exit
+
+# Start MasterBot
 echo "🔮 Starting ICEGODS MasterBot..."
+nohup python3 run_all_modules.py > ~/MasterBot/nohup.out 2>&1 &
 
-# EchoEyes
-echo "👁 Starting EchoEyes..."
-nohup python3 ~/MasterBot/EchoEyes/echoeyes.py > ~/MasterBot/EchoEyes/EchoEyes_log.txt 2>&1 &
+# Start Payment Webhook
+echo "💰 Starting Payment Webhook..."
+nohup python3 payment_webhook.py > ~/MasterBot/payment_webhook.log 2>&1 &
 
-# Wallet Monitor
-echo "💰 Starting Wallet Monitor..."
-nohup python3 ~/MasterBot/WalletMonitor/wallet_monitor.py > ~/MasterBot/WalletMonitor/WalletMonitor_log.txt 2>&1 &
-
-# Email Monitor
-echo "📧 Starting Email Monitor..."
-nohup python3 ~/MasterBot/EmailMonitor/email_monitor.py > ~/MasterBot/EmailMonitor/EmailMonitor_log.txt 2>&1 &
-
-echo "✅ All ICEGODS modules started. Logs are being saved in each module folder."
-
-bash ~/MasterBot/start_dashboard.sh
-echo "🌐 Open dashboard: http://127.0.0.1:${DASHBOARD_PORT:-8088}"
+# Show message
+echo "✅ ICEGODS MasterBot, Dashboard, and Payment Webhook started."
+echo "📊 Dashboard: http://127.0.0.1:8088"
+echo "💵 Payments will notify Telegram instantly."
+echo "🔍 Logs: ~/MasterBot/nohup.out & ~/MasterBot/payment_webhook.log"

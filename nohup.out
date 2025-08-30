@@ -1,0 +1,4 @@
+✅ ICEGODS MasterBot, Dashboard, and Payment Webhook started.
+📊 Dashboard: http://127.0.0.1:8088
+💵 Payments will notify Telegram instantly.
+🔍 Logs: ~/MasterBot/nohup.out & ~/MasterBot/payment_webhook.log

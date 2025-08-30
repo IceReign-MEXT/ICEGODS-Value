@@ -1,6 +1,22 @@
 nohup: ignoring input
-🔮 Starting ICEGODS MasterBot...
-👁 Starting EchoEyes...
-💰 Starting Wallet Monitor...
-📧 Starting Email Monitor...
-✅ All ICEGODS modules started. Logs are being saved in each module folder.
+[MASTERBOT] Starting all modules...
+[BotModule1] Bot started
+[BotModule2] Bot started
+[EchoEyes] Bot started
+[EchoEyes] Loaded 1 users
+[EchoEyes] ✅ User 123456789 is PAID. Full features enabled.
+[EmailMonitor] Bot started
+[SmartContractWatch] Bot started
+[SmartContractWatch] AsyncClient initialized successfully
+[WalletMonitor] Bot started
+[WalletMonitor] Loaded 1 users
+[WalletMonitor] User 123456789 subscription: paid
+[MASTERBOT] All modules running. Waiting for user wallets and payments...
+ * Serving Flask app 'payment_webhook'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.20.10.2:5000
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [30/Aug/2025 09:59:51] "POST /payment HTTP/1.1" 200 -

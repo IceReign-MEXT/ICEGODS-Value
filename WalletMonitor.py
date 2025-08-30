@@ -1,70 +1,41 @@
 import os
 import time
-import logging
+from web3 import Web3
+from solana.rpc.api import Client as SolanaClient
+from dotenv import load_dotenv
 from telegram import Bot
 
 # =========================
 # Load Environment Variables
 # =========================
+load_dotenv()
+
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
-SOLANA_WALLETS = os.getenv("SOLANA_WALLETS", "").split(",")
+SOLANA_WALLETS = os.getenv("SOLANA_WALLETS")
 ETH_WALLET = os.getenv("ETH_WALLET")
 BTC_WALLET = os.getenv("BTC_WALLET")
 USDT_WALLET = os.getenv("USDT_WALLET")
 
-# Initialize Telegram Bot
+if not TELEGRAM_BOT_TOKEN:
+    raise ValueError("TELEGRAM_BOT_TOKEN not found in .env")
+
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 
 # =========================
-# Logging
+# Initialize Clients
 # =========================
-logging.basicConfig(
-    filename="WalletMonitor_log.txt",
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    level=logging.INFO
-)
+sol_client = SolanaClient("https://api.mainnet-beta.solana.com")
+eth_client = Web3(Web3.HTTPProvider(os.getenv("INFURA_MAINNET")))
 
 # =========================
 # Wallet Monitoring Logic
 # =========================
-def check_wallets():
-    """
-    Placeholder: Add blockchain API logic here to fetch wallet balances.
-    """
-    balances = {
-        "solana": "10 SOL",  # Example
-        "ethereum": "2 ETH",
-        "bitcoin": "0.05 BTC",
-        "usdt": "150 USDT"
-    }
+def check_solana_balance():
+    balances = {}
+    for wallet in SOLANA_WALLETS.split(","):
+        resp = sol_client.get_balance(wallet)
+        if resp.get("result"):
+            balances[wallet] = resp["result"]["value"] / 1e9
     return balances
-
-def notify_user(message):
-    try:
-        bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message)
-        logging.info(f"Notification sent: {message}")
-    except Exception as e:
-        logging.error(f"Failed to send Telegram message: {e}")
-
-# =========================
-# Main Loop
-# =========================
-def main():
-    logging.info("Wallet Monitor started.")
-    while True:
-        try:
-            balances = check_wallets()
-            msg = "💰 Wallet Balances:\n"
-            msg += f"💠 Solana: {balances['solana']}\n"
-            msg += f"⛓️ Ethereum: {balances['ethereum']}\n"
-            msg += f"₿ Bitcoin: {balances['bitcoin']}\n"
-            msg += f"💵 USDT: {balances['usdt']}\n"
-            notify_user(msg)
-        except Exception as e:
-            logging.error(f"Error in WalletMonitor: {e}")
-        time.sleep(300)  # Check every 5 minutes
-
-if __name__ == "__main__":
-    main()

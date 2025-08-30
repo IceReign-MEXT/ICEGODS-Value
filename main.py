@@ -1,9 +1,7 @@
 import os
 import logging
 import threading
-from telegram import Bot, BotCommand
-from telegram.ext import Application, CommandHandler, ContextTypes
-from telegram import Update
+from telegram.ext import Application, CommandHandler
 from flask import Flask
 
 # =========================
@@ -12,11 +10,13 @@ from flask import Flask
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
+# Wallets
 SOLANA_WALLETS = os.getenv("SOLANA_WALLETS")
 ETH_WALLET = os.getenv("ETH_WALLET")
 BTC_WALLET = os.getenv("BTC_WALLET")
 USDT_WALLET = os.getenv("USDT_WALLET")
 
+# Dashboard Settings
 DASHBOARD_HOST = os.getenv("DASHBOARD_HOST", "0.0.0.0")
 DASHBOARD_PORT = int(os.getenv("DASHBOARD_PORT", "8088"))
 
@@ -24,19 +24,18 @@ DASHBOARD_PORT = int(os.getenv("DASHBOARD_PORT", "8088"))
 # Logging
 # =========================
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 
 # =========================
 # Telegram Bot Handlers
 # =========================
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("🚀 ICEGODS MasterBot is alive!")
+async def start(update, context):
+    await update.message.reply_text("🚀 ICEGODS MasterBot is online!")
 
-async def wallets(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def wallets(update, context):
     msg = (
-        f"🔗 **Wallets Being Tracked**\n\n"
+        f"🔗 **Tracked Wallets:**\n\n"
         f"💠 Solana: `{SOLANA_WALLETS}`\n"
         f"⛓️ Ethereum: `{ETH_WALLET}`\n"
         f"₿ Bitcoin: `{BTC_WALLET}`\n"
@@ -44,52 +43,36 @@ async def wallets(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     await update.message.reply_text(msg, parse_mode="Markdown")
 
-async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("💳 Subscription plans coming soon...")
+async def stats(update, context):
+    await update.message.reply_text("📊 Stats are coming soon!")
 
-async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("📊 Your subscription status: PAID")  # placeholder
+async def plans(update, context):
+    await update.message.reply_text(
+        "💰 Subscription Plans:\n"
+        "BASIC: 10 USDT / 0.05 SOL / 0.003 ETH / 0.00015 BTC\n"
+        "PRO: 25 USDT / 0.12 SOL / 0.007 ETH / 0.00035 BTC\n"
+        "ELITE: 50 USDT / 0.25 SOL / 0.014 ETH / 0.0007 BTC"
+    )
 
-async def whitepaper(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("📄 ICEGODS whitepaper: [link]")
+async def whitepaper(update, context):
+    await update.message.reply_text("📄 Whitepaper link coming soon!")
 
-async def plans(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("💰 Subscription plans:\nBasic / Pro / Elite")  # placeholder
-
-# =========================
-# Set Bot Commands (BotFather)
-# =========================
-def set_bot_commands():
-    bot = Bot(token=TELEGRAM_BOT_TOKEN)
-    commands = [
-        BotCommand("start", "🚀 Start the ICEGODS MasterBot"),
-        BotCommand("wallets", "🔗 Show tracked wallet balances"),
-        BotCommand("subscribe", "💳 Subscribe to a plan"),
-        BotCommand("status", "📊 Check subscription status"),
-        BotCommand("whitepaper", "📄 Get ICEGODS whitepaper"),
-        BotCommand("plans", "💰 Show subscription plans")
-    ]
-    bot.set_my_commands(commands)
-    print("✅ Bot commands updated in BotFather!")
+async def subscribe(update, context):
+    await update.message.reply_text("🔗 Payment addresses:\nCheck /wallet for details.")
 
 # =========================
 # Run Telegram Bot
 # =========================
 def run_bot():
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
-    
-    # Command Handlers
+
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("wallets", wallets))
-    application.add_handler(CommandHandler("subscribe", subscribe))
-    application.add_handler(CommandHandler("status", status))
-    application.add_handler(CommandHandler("whitepaper", whitepaper))
+    application.add_handler(CommandHandler("stats", stats))
     application.add_handler(CommandHandler("plans", plans))
+    application.add_handler(CommandHandler("whitepaper", whitepaper))
+    application.add_handler(CommandHandler("subscribe", subscribe))
 
-    # Register commands with BotFather
-    set_bot_commands()
-
-    # Start polling
     application.run_polling()
 
 # =========================

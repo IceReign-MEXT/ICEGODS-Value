@@ -1,0 +1,14 @@
+cat > .gitignore << 'EOF'
+# Secrets
+config.env
+subscriptions.db
+users.json
+
+# Logs
+*.log
+*.p
+
+# Python cache
+__pycache__/
+*.pyc
+EOF

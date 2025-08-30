@@ -1,5 +1,6 @@
 import os
-from flask import Flask, request, jsonify
+import time
+import logging
 from telegram import Bot
 
 # =========================
@@ -8,40 +9,62 @@ from telegram import Bot
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
+SOLANA_WALLETS = os.getenv("SOLANA_WALLETS", "").split(",")
+ETH_WALLET = os.getenv("ETH_WALLET")
+BTC_WALLET = os.getenv("BTC_WALLET")
+USDT_WALLET = os.getenv("USDT_WALLET")
+
 # Initialize Telegram Bot
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 
-# Initialize Flask App
-app = Flask(__name__)
+# =========================
+# Logging
+# =========================
+logging.basicConfig(
+    filename="WalletMonitor_log.txt",
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO
+)
 
 # =========================
-# Payment Webhook Endpoint
+# Wallet Monitoring Logic
 # =========================
-@app.route("/payment", methods=["POST"])
-def payment_webhook():
+def check_wallets():
+    """
+    Placeholder: Add blockchain API logic here to fetch wallet balances.
+    """
+    balances = {
+        "solana": "10 SOL",  # Example
+        "ethereum": "2 ETH",
+        "bitcoin": "0.05 BTC",
+        "usdt": "150 USDT"
+    }
+    return balances
+
+def notify_user(message):
     try:
-        data = request.json
-        telegram_id = data.get("telegram_id")
-        amount = data.get("amount")
-        currency = data.get("currency")
-
-        if not telegram_id or not amount or not currency:
-            return jsonify({"error": "Missing fields"}), 400
-
-        # Send Telegram notification
-        msg = f"💰 Payment received!\nUser: {telegram_id}\nAmount: {amount} {currency}\n✅ Upgraded to PAID subscription"
-        bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=msg)
-
-        # Respond to the webhook
-        return jsonify({"status": "success", "message": "Payment processed"}), 200
-
+        bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message)
+        logging.info(f"Notification sent: {message}")
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        logging.error(f"Failed to send Telegram message: {e}")
 
 # =========================
-# Run Flask App
+# Main Loop
 # =========================
+def main():
+    logging.info("Wallet Monitor started.")
+    while True:
+        try:
+            balances = check_wallets()
+            msg = "💰 Wallet Balances:\n"
+            msg += f"💠 Solana: {balances['solana']}\n"
+            msg += f"⛓️ Ethereum: {balances['ethereum']}\n"
+            msg += f"₿ Bitcoin: {balances['bitcoin']}\n"
+            msg += f"💵 USDT: {balances['usdt']}\n"
+            notify_user(msg)
+        except Exception as e:
+            logging.error(f"Error in WalletMonitor: {e}")
+        time.sleep(300)  # Check every 5 minutes
+
 if __name__ == "__main__":
-    DASHBOARD_HOST = os.getenv("DASHBOARD_HOST", "0.0.0.0")
-    DASHBOARD_PORT = int(os.getenv("DASHBOARD_PORT", "5000"))
-    app.run(host=DASHBOARD_HOST, port=DASHBOARD_PORT)
+    main()

@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 from telegram import Bot
+import logging
 
 # =========================
 # Load Environment Variables
@@ -8,15 +9,20 @@ from telegram import Bot
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
-# Validate token
-if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-    raise ValueError("Please set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in your .env file")
-
 # Initialize Telegram Bot
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 
 # Initialize Flask App
 app = Flask(__name__)
+
+# =========================
+# Logging
+# =========================
+logging.basicConfig(
+    filename="payment_webhook.log",
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO
+)
 
 # =========================
 # Payment Webhook Endpoint
@@ -30,6 +36,7 @@ def payment_webhook():
         currency = data.get("currency")
 
         if not telegram_id or not amount or not currency:
+            logging.warning(f"Invalid payload: {data}")
             return jsonify({"error": "Missing fields"}), 400
 
         # Send Telegram notification
@@ -40,11 +47,12 @@ def payment_webhook():
             f"✅ Upgraded to PAID subscription"
         )
         bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=msg)
+        logging.info(f"Payment processed: {msg}")
 
-        # Respond to the webhook
         return jsonify({"status": "success", "message": "Payment processed"}), 200
 
     except Exception as e:
+        logging.error(f"Error in payment_webhook: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 # =========================
@@ -53,4 +61,5 @@ def payment_webhook():
 if __name__ == "__main__":
     DASHBOARD_HOST = os.getenv("DASHBOARD_HOST", "0.0.0.0")
     DASHBOARD_PORT = int(os.getenv("DASHBOARD_PORT", "5000"))
+    logging.info(f"Starting Payment Webhook on {DASHBOARD_HOST}:{DASHBOARD_PORT}")
     app.run(host=DASHBOARD_HOST, port=DASHBOARD_PORT)
